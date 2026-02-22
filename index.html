@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agis Fabric — HAI Single Pane Work Console (Demo)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand" aria-label="Agis Fabric">
+      <div class="brand-badge" title="Agis Fabric">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L3 6.5V17.5L12 22L21 17.5V6.5L12 2Z" stroke="rgba(11,18,32,0.9)" stroke-width="2"/>
+          <path d="M12 6L6.5 8.7V15.3L12 18L17.5 15.3V8.7L12 6Z" fill="rgba(11,18,32,0.9)"/>
+        </svg>
+      </div>
+      <div class="brand-title">
+        <div class="name">Agis Fabric</div>
+        <div class="sub">HAI Work Console · Portfolio & Agentic Delivery Control Plane</div>
+      </div>
+    </div>
+
+    <div class="topbar-center">
+      <div class="breadcrumbs" role="status" aria-live="polite">
+        <span>Perspective:</span> <strong id="perspectiveLabel">Portfolio</strong>
+        <span>·</span>
+        <span>Lens:</span> <strong id="lensLabel">Portfolio Map</strong>
+        <span>·</span>
+        <span>Initiative:</span> <strong id="initiativeLabel">UPS Brokerage HAI Work Console (Single Pane)</strong>
+      </div>
+    </div>
+
+    <div class="topbar-actions">
+      <div class="search" aria-label="Global search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.5 18.5C14.6421 18.5 18 15.1421 18 11C18 6.85786 14.6421 3.5 10.5 3.5C6.35786 3.5 3 6.85786 3 11C3 15.1421 6.35786 18.5 10.5 18.5Z" stroke="rgba(255,255,255,0.72)" stroke-width="2"/>
+          <path d="M21 21L16.8 16.8" stroke="rgba(255,255,255,0.72)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input id="globalSearch" type="search" placeholder="Search: shipment, entry, policy, incident, evidence…" />
+      </div>
+
+      <div class="pill" title="Environment">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 20V4H20V20H4Z" stroke="rgba(255,255,255,0.72)" stroke-width="2"/>
+          <path d="M8 8H16V16H8V8Z" fill="rgba(255,255,255,0.14)"/>
+        </svg>
+        <span id="envLabel">Prod (Demo)</span>
+      </div>
+
+      <button class="icon-btn" id="approvalsBtn" title="Approvals Inbox">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 3H17V7H21V21H3V7H7V3Z" stroke="rgba(255,255,255,0.72)" stroke-width="2"/>
+          <path d="M7 7H17" stroke="rgba(255,255,255,0.72)" stroke-width="2"/>
+          <path d="M7 13H17" stroke="rgba(255,255,255,0.72)" stroke-width="2"/>
+          <path d="M7 17H13" stroke="rgba(255,255,255,0.72)" stroke-width="2"/>
+        </svg>
+      </button>
+
+      <div class="menu">
+        <button class="icon-btn" id="logoMenuBtn" title="Perspectives & Lenses">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 6H20" stroke="rgba(255,255,255,0.72)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M4 12H20" stroke="rgba(255,255,255,0.72)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M4 18H20" stroke="rgba(255,255,255,0.72)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        <div class="menu-panel hidden" id="logoMenuPanel" role="dialog" aria-label="Perspective menu">
+          <h4>Perspective</h4>
+          <div class="menu-row" id="perspectiveChips"></div>
+
+          <div class="menu-divider"></div>
+
+          <h4>Lens (dimension-specific UI)</h4>
+          <div class="menu-row" id="lensChips"></div>
+
+          <div class="menu-divider"></div>
+
+          <h4>Bucket Filter (10 automation categories)</h4>
+          <div class="menu-row" id="bucketChips"></div>
+
+          <div class="menu-divider"></div>
+
+          <div class="menu-row" style="justify-content:space-between;">
+            <span class="small">Demo mode: static data</span>
+            <span class="badge" id="policyVersion">Policy v3.2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- LEFT: HAI Work Console -->
+    <aside class="panel hai" aria-label="HAI Work Console">
+      <div class="panel-header">
+        <div class="title">
+          <span>HAI Work Console</span>
+          <span class="badge" id="haiModeBadge">Plan</span>
+          <span class="badge" id="haiTrustBadge">Explainable + Auditable</span>
+        </div>
+        <div class="meta">HMI writes require concurrence at commit points</div>
+      </div>
+
+      <div class="hai-body">
+        <div class="mode-tabs" id="modeTabs"></div>
+
+        <div class="kpi-row" id="kpiRow"></div>
+
+        <div>
+          <div class="section-title">Context (auto‑scoped)</div>
+          <div class="context-row" id="contextChips"></div>
+        </div>
+
+        <div class="chat" id="chat"></div>
+
+        <div class="composer">
+          <input id="composerInput" type="text" placeholder="Describe intent… e.g., ‘Resolve entry exception and prepare evidence pack’" />
+          <button class="primary" id="sendBtn">Send</button>
+        </div>
+
+        <div>
+          <div class="section-title">Actions (agent-first)</div>
+          <div class="action-row">
+            <button class="btn" id="simulateBtn">Simulate</button>
+            <button class="btn good" id="runBtn">Run (dry)</button>
+            <button class="btn warn" id="approvalBtn">Request Concurrence</button>
+            <button class="btn" id="ticketBtn">Create Ticket</button>
+            <button class="btn" id="evidenceBtn">Evidence Pack</button>
+          </div>
+        </div>
+
+        <div class="split">
+          <div class="section-title">Initiatives (10 buckets × 4 frameworks)</div>
+          <div class="initiatives">
+            <div class="toolbar">
+              <select id="bucketFilter"></select>
+              <select id="portfolioFilter">
+                <option value="All">All portfolios</option>
+                <option value="Brokerage">Brokerage</option>
+                <option value="Trade Compliance">Trade Compliance</option>
+                <option value="IT Ops">IT Ops</option>
+                <option value="Finance Ops">Finance Ops</option>
+                <option value="Enterprise Platforms">Enterprise Platforms</option>
+                <option value="DataOps">DataOps</option>
+                <option value="Commercial">Commercial</option>
+                <option value="Customer Ops">Customer Ops</option>
+                <option value="Partner Ops">Partner Ops</option>
+                <option value="IT Portfolio">IT Portfolio</option>
+                <option value="Risk Analytics">Risk Analytics</option>
+                <option value="GRC">GRC</option>
+                <option value="SecOps">SecOps</option>
+                <option value="Security">Security</option>
+                <option value="Platform Engineering">Platform Engineering</option>
+                <option value="Architecture">Architecture</option>
+                <option value="Brokerage Risk">Brokerage Risk</option>
+                <option value="Brokerage Transformation">Brokerage Transformation</option>
+                <option value="CX">CX</option>
+                <option value="Compliance Analytics">Compliance Analytics</option>
+                <option value="Compliance COE">Compliance COE</option>
+              </select>
+            </div>
+            <div class="list" id="initiativeList"></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT: HMI + Explainability -->
+    <section class="right" aria-label="HMI and Explainability">
+      <div class="panel hmi">
+        <div class="panel-header">
+          <div class="title">
+            <span>HMI Console</span>
+            <span class="badge">System of Record</span>
+            <span class="badge" id="hmiGuard">Writes gated</span>
+          </div>
+          <div class="meta" id="hmiMeta">Portfolio map and initiative drilldowns</div>
+        </div>
+        <div class="hmi-body">
+          <div class="tabs" id="hmiTabs"></div>
+          <div id="hmiContent"></div>
+        </div>
+      </div>
+
+      <div class="panel explain">
+        <div class="panel-header">
+          <div class="title">
+            <span>Explainability & Execution Trace</span>
+            <span class="badge">Transparent plan + evidence</span>
+          </div>
+          <div class="meta">Human-friendly rationale (not private model tokens)</div>
+        </div>
+        <div class="explain-body">
+          <div class="grid2">
+            <div class="mindmap-wrap">
+              <div class="section-title">Strategy Map (mind map)</div>
+              <div id="mindmap"></div>
+              <div class="small" style="margin-top:8px;">Shows *what* the agent intends to do and *why*, with policy and evidence references.</div>
+            </div>
+            <div>
+              <div class="card" id="trustCard"></div>
+              <div style="height:10px"></div>
+              <div class="card" id="rlCard"></div>
+            </div>
+          </div>
+
+          <div class="section-title" style="margin-top:12px;">Execution Trace (actions + outcomes)</div>
+          <div class="trace" id="trace"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Approval">
+      <div class="mh">
+        <div class="ttl" id="modalTitle">Approval Required</div>
+        <button class="icon-btn" id="modalClose" title="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 6L18 18" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M18 6L6 18" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="mb" id="modalBody"></div>
+      <div class="mf">
+        <button class="btn" id="modalReject">Reject</button>
+        <button class="btn warn" id="modalRequestMore">Request Changes</button>
+        <button class="btn good" id="modalApprove">Approve</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast" role="status" aria-live="polite">
+    <div class="tt" id="toastTitle">Toast</div>
+    <div class="td" id="toastDesc">Details</div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
