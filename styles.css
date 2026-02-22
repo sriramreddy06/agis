@@ -186,8 +186,28 @@ button,input,select{font:inherit;}
   font-weight:700;
   font-size:12px;
   display:flex; align-items:center; justify-content:center; gap:8px;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 120ms ease;
 }
-.mode-btn.active{background:rgba(167,139,250,0.18); border-color:rgba(167,139,250,0.60)}
+.mode-btn:active{transform: translateY(0) scale(0.985);}
+.mode-btn:focus-visible{
+  outline: 2px solid rgba(167,139,250,0.80);
+  outline-offset: 2px;
+}
+.mode-btn.active{
+  background:rgba(167,139,250,0.22);
+  border-color:rgba(167,139,250,0.70);
+  box-shadow: 0 10px 22px rgba(167,139,250,0.12);
+  transform: translateY(-1px);
+  animation: modePop 180ms ease-out;
+}
+@keyframes modePop{
+  from{ transform: translateY(0) scale(0.98); }
+  to{ transform: translateY(-1px) scale(1); }
+}
 
 .kpi-row{display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;}
 .kpi{

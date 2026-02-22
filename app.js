@@ -248,10 +248,13 @@
     wrap.innerHTML = '';
     MODES.forEach(m => {
       wrap.appendChild(el('button', {
+        type: 'button',
         class: `mode-btn ${state.mode === m ? 'active' : ''}`,
+        'aria-pressed': state.mode === m ? 'true' : 'false',
         onclick: () => {
           state.mode = m;
           $('haiModeBadge').textContent = m;
+          renderModeTabs(); // refresh active styling + replay selection animation
           renderChat(true);
           renderExplainability();
         }
