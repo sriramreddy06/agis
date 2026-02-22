@@ -559,6 +559,11 @@ const AGENT_PIPELINE = {
 };
 
 // Expose as a single global to keep the demo double-click runnable.
+const DEFAULT_SCENARIO = {
+  title: 'Brokerage: resolve an entry exception and draft an amendment with evidence',
+  prompt: 'An entry is on hold due to missing data and a classification mismatch. Resolve the exception, propose an amendment, and prepare an audit-ready evidence pack. Minimize manual touches; require concurrence before committing.'
+};
+
 window.AGIS_DATA = {
   BUCKETS,
   FRAMEWORKS,
@@ -568,11 +573,3 @@ window.AGIS_DATA = {
   AGENT_PIPELINE,
   DEFAULT_SCENARIO
 };
-
-// Default demo scenario:
-const DEFAULT_SCENARIO = {
-  title: 'Brokerage: resolve an entry exception and draft an amendment with evidence',
-  prompt: 'An entry is on hold due to missing data and a classification mismatch. Resolve the exception, propose an amendment, and prepare an audit-ready evidence pack. Minimize manual touches; require concurrence before committing.'
-};
-
-window.AGIS_DATA.DEFAULT_SCENARIO = DEFAULT_SCENARIO;
