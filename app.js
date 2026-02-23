@@ -314,9 +314,69 @@
 
   const chatState = { messages: [] };
 
+  function renderQuickReplies(){
+    const wrap = $('quickReplies');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+
+    const scenario = (D.DEFAULT_SCENARIO && D.DEFAULT_SCENARIO.prompt) ? D.DEFAULT_SCENARIO : null;
+
+    const repliesByMode = {
+      Ask: [
+        { t: 'What can you do?', v: 'What can you do for this initiative?' },
+        { t: 'Show KPIs', v: 'Show the KPIs and targets.' },
+        { t: 'Show risks', v: 'What are the main risks and guardrails?' }
+      ],
+      Plan: [
+        { t: 'Simulate plan', v: 'Simulate a plan for this.' },
+        { t: 'Commit points', v: 'Show commit points and required approvals.' },
+        { t: 'Gates & evidence', v: 'Show gates and evidence requirements.' }
+      ],
+      Execute: [
+        { t: 'Run dry', v: 'Run a dry execution (no writes).' },
+        { t: 'Request concurrence', v: 'Request concurrence for the commit points.' },
+        { t: 'Create ticket', v: 'Create a ticket with evidence links.' }
+      ],
+      Explain: [
+        { t: 'Explain rationale', v: 'Explain the rationale in simple terms.' },
+        { t: 'Show strategy map', v: 'Show the strategy map and assumptions.' },
+        { t: 'Show trace', v: 'Show the latest execution trace.' }
+      ],
+      Audit: [
+        { t: 'Evidence pack', v: 'Generate an evidence pack.' },
+        { t: 'Approvals', v: 'Show approvals and exceptions.' },
+        { t: 'Audit trail', v: 'Show the audit trail.' }
+      ]
+    };
+
+    const base = [];
+    if (scenario) base.push({ t: 'Use default scenario', v: scenario.prompt });
+    base.push({ t: 'Simulate', v: 'Simulate a plan.' });
+    base.push({ t: 'Run (dry)', v: 'Run a dry execution.' });
+    base.push({ t: 'Evidence', v: 'Generate an evidence pack.' });
+
+    const replies = [...base, ...(repliesByMode[state.mode] || [])]
+      .filter(Boolean)
+      .filter((x, idx, arr) => arr.findIndex(y => y.t === x.t) === idx)
+      .slice(0, 10);
+
+    replies.forEach(r => {
+      wrap.appendChild(el('button', {
+        type: 'button',
+        class: 'qr',
+        onclick: () => {
+          $('composerInput').value = r.v;
+          addUserMessage(r.v);
+          $('composerInput').value = '';
+        }
+      }, r.t));
+    });
+  }
+
   function seedChat(force=false) {
     if (chatState.messages.length && !force) return;
     const i = initiativeById(state.selectedInitiative);
+    const scenario = (D.DEFAULT_SCENARIO && D.DEFAULT_SCENARIO.title) ? D.DEFAULT_SCENARIO : null;
     chatState.messages = [
       {
         who: 'User',
@@ -328,14 +388,26 @@
         ts: '09:16',
         txt: `Understood. I will operate in an agent-first mode: capture intent → plan → preview → concurrence → commit → evidence.\n\nI will show: (1) plan & rationale, (2) gated HMI actions, and (3) an auditable trace.\n\nWhat outcome do you want to optimize right now?` ,
         mini: 'Tip: choose a bucket (A1–A10) and a perspective (BidOps/BuildOps/RunOps/LifeOps) from the top-right menu.'
+      },
+      scenario ? {
+        who: 'Aegis HAI',
+        ts: '09:16',
+        txt: `Want a starting point? Default scenario: “${scenario.title}”.\n\nYou can click “Use default scenario” below, or type your own intent.`,
+        mini: 'This is a static demo (no backend). All actions are simulated client-side.'
+      } : null,
+      {
+        who: 'Aegis HAI',
+        ts: '09:16',
+        txt: `Quick flow: Simulate → Run (dry) → Request Concurrence → Evidence Pack.\n\nIf you tell me the KPI (cycle time, SLA breaches, accuracy, audit effort), I’ll tailor the plan.`
       }
     ];
+    chatState.messages = chatState.messages.filter(Boolean);
 
     if (state.mode === 'Ask') {
       chatState.messages.push({
         who: 'Aegis HAI',
         ts: '09:17',
-        txt: `I can answer, search policies, or summarize the current state. I will not make system writes unless you request a commit and provide concurrence.`
+        txt: `Ask mode: I can clarify requirements, call out constraints, and summarize the current state.\n\nWhat’s the primary goal: speed, quality, compliance, or cost?`
       });
     }
 
@@ -343,7 +415,12 @@
       chatState.messages.push({
         who: 'Aegis HAI',
         ts: '09:17',
-        txt: `Draft plan for this initiative:\n1) Identify the highest-volume workflows and top exceptions\n2) Determine automation candidates by bucket and autonomy\n3) Propose workflow orchestration + approvals\n4) Define evidence pack requirements\n5) Roll out with canaries and monitor SLO impact`
+        txt: `Plan mode: Draft plan for this initiative:\n1) Identify the highest-volume workflows and top exceptions\n2) Determine automation candidates by bucket and autonomy\n3) Propose orchestration + approvals (commit points)\n4) Define evidence pack requirements\n5) Roll out with canaries and monitor SLO impact`
+      });
+      chatState.messages.push({
+        who: 'Aegis HAI',
+        ts: '09:17',
+        txt: `Before we execute: which systems are in scope (Entry system, policy repo, ITSM, evidence store)?`
       });
     }
 
@@ -351,7 +428,7 @@
       chatState.messages.push({
         who: 'Aegis HAI',
         ts: '09:17',
-        txt: `Execution is gated. I can run a dry-run simulation now, then request concurrence before committing any HMI transactions.`
+        txt: `Execute mode: execution is gated. I can run a dry-run simulation now, then request concurrence before committing any HMI transactions.\n\nDo you want a dry-run first?`
       });
     }
 
@@ -359,7 +436,7 @@
       chatState.messages.push({
         who: 'Aegis HAI',
         ts: '09:17',
-        txt: `I will show the rationale in a human-friendly way: assumptions, constraints, policy checks, and evidence links. (No private token traces.)`
+        txt: `Explain mode: I will show the rationale in a human-friendly way: assumptions, constraints, policy checks, and evidence links.\n\nAsk me “why” for any step.`
       });
     }
 
@@ -367,7 +444,7 @@
       chatState.messages.push({
         who: 'Aegis HAI',
         ts: '09:17',
-        txt: `Audit view: I will show who approved what, which policies were applied, and what evidence supports each action.`
+        txt: `Audit mode: I will show who approved what, which policies were applied, and what evidence supports each action.\n\nWant a packaged evidence manifest now?`
       });
     }
   }
@@ -392,6 +469,7 @@
       wrap.appendChild(el('div', { class: 'msg' }, [av, bub]));
     });
     wrap.scrollTop = wrap.scrollHeight;
+    renderQuickReplies();
   }
 
   function addUserMessage(text) {
@@ -405,6 +483,7 @@
     });
     renderChat();
     renderExplainability();
+    renderQuickReplies();
   }
 
   function timeNow(){
