@@ -1,4 +1,4 @@
-// Static demo data for Agis Fabric HAI Work Console
+// Static demo data for Aegis Fabric HAI Work Console
 // All names/data are illustrative for demonstration purposes.
 
 const BUCKETS = [
@@ -65,10 +65,10 @@ const BUCKETS = [
 ];
 
 const FRAMEWORKS = [
-  { id: 'BidOps', name: 'Agis BidOps', color: 'var(--c-bid)' },
-  { id: 'BuildOps', name: 'Agis BuildOps', color: 'var(--c-build)' },
-  { id: 'RunOps', name: 'Agis RunOps', color: 'var(--c-run)' },
-  { id: 'LifeOps', name: 'Agis LifeOps', color: 'var(--c-life)' }
+  { id: 'BidOps', name: 'Aegis BidOps', color: 'var(--c-bid)' },
+  { id: 'BuildOps', name: 'Aegis BuildOps', color: 'var(--c-build)' },
+  { id: 'RunOps', name: 'Aegis RunOps', color: 'var(--c-run)' },
+  { id: 'LifeOps', name: 'Aegis LifeOps', color: 'var(--c-life)' }
 ];
 
 const AUTONOMY_LEVELS = [

@@ -1,8 +1,8 @@
 /*
-  Agis Fabric — HAI Single Pane Work Console (Static Demo)
+  Aegis Fabric — HAI Single Pane Work Console (Static Demo)
   ------------------------------------------------------
   This is a client-side-only, static prototype (no backend). It is designed to
-  demonstrate how Agis Fabric manages initiatives across 10 automation buckets
+  demonstrate how Aegis Fabric manages initiatives across 10 automation buckets
   and 4 operating frameworks (BidOps/BuildOps/RunOps/LifeOps) with an agent-first
   approach, while preserving transparency (explainability, evidence, policy gates).
 
@@ -324,7 +324,7 @@
         txt: `Focus initiative: “${i.name}”. Help me drive outcomes with minimal manual touches.`
       },
       {
-        who: 'Agis HAI',
+        who: 'Aegis HAI',
         ts: '09:16',
         txt: `Understood. I will operate in an agent-first mode: capture intent → plan → preview → concurrence → commit → evidence.\n\nI will show: (1) plan & rationale, (2) gated HMI actions, and (3) an auditable trace.\n\nWhat outcome do you want to optimize right now?` ,
         mini: 'Tip: choose a bucket (A1–A10) and a perspective (BidOps/BuildOps/RunOps/LifeOps) from the top-right menu.'
@@ -333,7 +333,7 @@
 
     if (state.mode === 'Ask') {
       chatState.messages.push({
-        who: 'Agis HAI',
+        who: 'Aegis HAI',
         ts: '09:17',
         txt: `I can answer, search policies, or summarize the current state. I will not make system writes unless you request a commit and provide concurrence.`
       });
@@ -341,7 +341,7 @@
 
     if (state.mode === 'Plan') {
       chatState.messages.push({
-        who: 'Agis HAI',
+        who: 'Aegis HAI',
         ts: '09:17',
         txt: `Draft plan for this initiative:\n1) Identify the highest-volume workflows and top exceptions\n2) Determine automation candidates by bucket and autonomy\n3) Propose workflow orchestration + approvals\n4) Define evidence pack requirements\n5) Roll out with canaries and monitor SLO impact`
       });
@@ -349,7 +349,7 @@
 
     if (state.mode === 'Execute') {
       chatState.messages.push({
-        who: 'Agis HAI',
+        who: 'Aegis HAI',
         ts: '09:17',
         txt: `Execution is gated. I can run a dry-run simulation now, then request concurrence before committing any HMI transactions.`
       });
@@ -357,7 +357,7 @@
 
     if (state.mode === 'Explain') {
       chatState.messages.push({
-        who: 'Agis HAI',
+        who: 'Aegis HAI',
         ts: '09:17',
         txt: `I will show the rationale in a human-friendly way: assumptions, constraints, policy checks, and evidence links. (No private token traces.)`
       });
@@ -365,7 +365,7 @@
 
     if (state.mode === 'Audit') {
       chatState.messages.push({
-        who: 'Agis HAI',
+        who: 'Aegis HAI',
         ts: '09:17',
         txt: `Audit view: I will show who approved what, which policies were applied, and what evidence supports each action.`
       });
@@ -399,7 +399,7 @@
     if (!t) return;
     chatState.messages.push({ who: 'User', ts: timeNow(), txt: t });
     chatState.messages.push({
-      who: 'Agis HAI',
+      who: 'Aegis HAI',
       ts: timeNow(),
       txt: respondToUser(t)
     });
@@ -895,8 +895,8 @@
     table.appendChild(tb);
 
     return el('div', { class: 'card' }, [
-      el('h3', {}, 'Gates & Evidence (Agis BuildOps)'),
-      el('p', {}, 'Agis Fabric enforces “prove before promote”: every gate is backed by an immutable evidence pack.'),
+      el('h3', {}, 'Gates & Evidence (Aegis BuildOps)'),
+      el('p', {}, 'Aegis Fabric enforces “prove before promote”: every gate is backed by an immutable evidence pack.'),
       el('div', { style: 'margin-top:10px' }, table),
       el('div', { style: 'margin-top:10px; display:flex; gap:8px; flex-wrap:wrap' }, [
         statusPill('Evidence packs', 'good', 'Immutable + hashed'),
@@ -928,7 +928,7 @@
       ]),
       el('div', { class: 'card' }, [
         el('h3', {}, 'Systems (integrations) — where the agent calls tools'),
-        el('p', {}, 'Agis HAI operates above systems of record using tool calls governed by RBAC, policy-as-code, and evidence packs.'),
+        el('p', {}, 'Aegis HAI operates above systems of record using tool calls governed by RBAC, policy-as-code, and evidence packs.'),
         el('div', { style: 'margin-top:10px' }, sysTable)
       ])
     ]);
@@ -1071,7 +1071,7 @@
     ];
     return el('div', { class: 'card' }, [
       el('h3', {}, 'Safety suite (demo)'),
-      el('p', {}, 'Before promoting autonomy, Agis Fabric runs safety suites and blocks release if severe failures occur.'),
+      el('p', {}, 'Before promoting autonomy, Aegis Fabric runs safety suites and blocks release if severe failures occur.'),
       buildTable(['Risk', 'Control', 'Status'], rows)
     ]);
   }
@@ -1261,7 +1261,7 @@
     $('rlCard').innerHTML = `
       <h3>Bottom-up: Agent Factory + Continuous Learning</h3>
       <p>
-        Agis Fabric improves through governed learning loops: feedback becomes rewards, but promotion is gated by evaluation + safety suites.
+        Aegis Fabric improves through governed learning loops: feedback becomes rewards, but promotion is gated by evaluation + safety suites.
       </p>
       <div style="margin-top:10px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
         <div class="kpi"><div class="k">Safety pass rate</div><div class="v">${m.safetyPassRate}</div><div class="s">Blocks promotion on severe failures</div></div>
