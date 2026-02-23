@@ -399,6 +399,26 @@
         who: 'Aegis HAI',
         ts: '09:16',
         txt: `Quick flow: Simulate → Run (dry) → Request Concurrence → Evidence Pack.\n\nIf you tell me the KPI (cycle time, SLA breaches, accuracy, audit effort), I’ll tailor the plan.`
+      },
+      {
+        who: 'User',
+        ts: '09:17',
+        txt: `Primary KPI: ${i.kpi.metric}. Baseline ${i.kpi.baseline} → Target ${i.kpi.target}.`
+      },
+      {
+        who: 'Aegis HAI',
+        ts: '09:17',
+        txt: `Great. Given risk = ${i.risk} and autonomy = ${i.autonomy}, we’ll keep writes gated and focus on reducing manual touches.\n\nNext, choose one:\n- Fix top exceptions (fastest cycle time win)\n- Improve first-pass accuracy (quality)\n- Strengthen evidence packs (audit effort)\n\nYou can also just click “Simulate plan”.`
+      },
+      {
+        who: 'User',
+        ts: '09:18',
+        txt: `Let’s start with top exceptions and simulate a plan.`
+      },
+      {
+        who: 'Aegis HAI',
+        ts: '09:18',
+        txt: `Perfect. I’ll generate a strategy map and mark commit points.\n\nAfter that, we’ll do a dry-run (no writes) and only then request concurrence for any system-of-record actions.`
       }
     ];
     chatState.messages = chatState.messages.filter(Boolean);
@@ -447,6 +467,9 @@
         txt: `Audit mode: I will show who approved what, which policies were applied, and what evidence supports each action.\n\nWant a packaged evidence manifest now?`
       });
     }
+
+    // Keep the demo chat concise on first load.
+    if (chatState.messages.length > 10) chatState.messages = chatState.messages.slice(0, 10);
   }
 
   function renderChat(force=false) {
