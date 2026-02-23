@@ -236,6 +236,17 @@ button,input,select{font:inherit;}
   padding:12px;
   overflow:auto;
 }
+.chat-meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:8px;
+  font-size:11px;
+  color:var(--muted2);
+}
+.chat-meta b{color:var(--text)}
+.chat-meta .hint{color:var(--muted2)}
 .msg{display:flex; gap:10px; margin:10px 0;}
 .avatar{
   width:28px; height:28px; border-radius:10px;

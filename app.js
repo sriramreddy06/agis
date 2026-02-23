@@ -377,6 +377,7 @@
     if (chatState.messages.length && !force) return;
     const i = initiativeById(state.selectedInitiative);
     const scenario = (D.DEFAULT_SCENARIO && D.DEFAULT_SCENARIO.title) ? D.DEFAULT_SCENARIO : null;
+    chatState.justSeeded = true;
     chatState.messages = [
       {
         who: 'User',
@@ -386,19 +387,19 @@
       {
         who: 'Aegis HAI',
         ts: '09:16',
-        txt: `Understood. I will operate in an agent-first mode: capture intent → plan → preview → concurrence → commit → evidence.\n\nI will show: (1) plan & rationale, (2) gated HMI actions, and (3) an auditable trace.\n\nWhat outcome do you want to optimize right now?` ,
+        txt: `Got it. I’ll run an agent-first flow: intent → plan → preview → concurrence → commit → evidence.\n\nWhat should we optimize first (speed, quality, compliance, or cost)?`,
         mini: 'Tip: choose a bucket (A1–A10) and a perspective (BidOps/BuildOps/RunOps/LifeOps) from the top-right menu.'
       },
       scenario ? {
         who: 'Aegis HAI',
         ts: '09:16',
-        txt: `Want a starting point? Default scenario: “${scenario.title}”.\n\nYou can click “Use default scenario” below, or type your own intent.`,
-        mini: 'This is a static demo (no backend). All actions are simulated client-side.'
+        txt: `Starter scenario: “${scenario.title}”. Click “Use default scenario” below to load it.`,
+        mini: 'Static demo: simulated actions (no backend).'
       } : null,
       {
         who: 'Aegis HAI',
         ts: '09:16',
-        txt: `Quick flow: Simulate → Run (dry) → Request Concurrence → Evidence Pack.\n\nIf you tell me the KPI (cycle time, SLA breaches, accuracy, audit effort), I’ll tailor the plan.`
+        txt: `Quick flow: Simulate → Run (dry) → Concurrence → Evidence Pack.`
       },
       {
         who: 'User',
@@ -408,7 +409,7 @@
       {
         who: 'Aegis HAI',
         ts: '09:17',
-        txt: `Great. Given risk = ${i.risk} and autonomy = ${i.autonomy}, we’ll keep writes gated and focus on reducing manual touches.\n\nNext, choose one:\n- Fix top exceptions (fastest cycle time win)\n- Improve first-pass accuracy (quality)\n- Strengthen evidence packs (audit effort)\n\nYou can also just click “Simulate plan”.`
+        txt: `Nice. Risk = ${i.risk}, autonomy = ${i.autonomy}. We’ll keep writes gated and focus on reducing manual touches.\n\nPick one: top exceptions, accuracy, or evidence packs.`
       },
       {
         who: 'User',
@@ -418,7 +419,7 @@
       {
         who: 'Aegis HAI',
         ts: '09:18',
-        txt: `Perfect. I’ll generate a strategy map and mark commit points.\n\nAfter that, we’ll do a dry-run (no writes) and only then request concurrence for any system-of-record actions.`
+        txt: `Perfect. Click “Simulate” to generate a plan + strategy map. Then we’ll run a dry-run and request concurrence if needed.`
       }
     ];
     chatState.messages = chatState.messages.filter(Boolean);
@@ -427,7 +428,7 @@
       chatState.messages.push({
         who: 'Aegis HAI',
         ts: '09:17',
-        txt: `Ask mode: I can clarify requirements, call out constraints, and summarize the current state.\n\nWhat’s the primary goal: speed, quality, compliance, or cost?`
+        txt: `Ask mode: tell me what “done” looks like. Which KPI matters most today?`
       });
     }
 
@@ -435,12 +436,7 @@
       chatState.messages.push({
         who: 'Aegis HAI',
         ts: '09:17',
-        txt: `Plan mode: Draft plan for this initiative:\n1) Identify the highest-volume workflows and top exceptions\n2) Determine automation candidates by bucket and autonomy\n3) Propose orchestration + approvals (commit points)\n4) Define evidence pack requirements\n5) Roll out with canaries and monitor SLO impact`
-      });
-      chatState.messages.push({
-        who: 'Aegis HAI',
-        ts: '09:17',
-        txt: `Before we execute: which systems are in scope (Entry system, policy repo, ITSM, evidence store)?`
+        txt: `Plan mode: I’ll draft steps + commit points + evidence requirements. Want me to start with a simulated plan?`
       });
     }
 
@@ -470,12 +466,20 @@
 
     // Keep the demo chat concise on first load.
     if (chatState.messages.length > 10) chatState.messages = chatState.messages.slice(0, 10);
+    // Ensure we still have a satisfying “starter conversation” even in sparse modes.
+    while (chatState.messages.length < 7) {
+      chatState.messages.push({ who: 'Aegis HAI', ts: '09:19', txt: `Tip: click a quick reply chip below to continue the conversation.` });
+    }
   }
 
   function renderChat(force=false) {
     seedChat(force);
     const wrap = $('chat');
     wrap.innerHTML = '';
+    wrap.appendChild(el('div', { class: 'chat-meta' }, [
+      el('div', {}, [el('b', {}, `Conversation`), ` · ${chatState.messages.length} messages`]),
+      el('div', { class: 'hint' }, `Scroll inside to see earlier messages`)
+    ]));
     chatState.messages.forEach(m => {
       const isUser = m.who === 'User';
       const av = el('div', { class: `avatar ${isUser ? 'user' : ''}` }, [
@@ -491,7 +495,13 @@
       ]);
       wrap.appendChild(el('div', { class: 'msg' }, [av, bub]));
     });
-    wrap.scrollTop = wrap.scrollHeight;
+    // On first load, start at the top so users can see the full conversation.
+    if (chatState.justSeeded) {
+      wrap.scrollTop = 0;
+      chatState.justSeeded = false;
+    } else {
+      wrap.scrollTop = wrap.scrollHeight;
+    }
     renderQuickReplies();
   }
 
